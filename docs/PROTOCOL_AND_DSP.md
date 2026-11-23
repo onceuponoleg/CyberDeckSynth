@@ -1,15 +1,15 @@
-# Архитектура прошивки, Прямой UART и Pure Mono DSP (V5.1 Dual-ESP32)
+# Архитектура прошивки, Прямой UART и Pure Mono DSP (V5.2 Dual-ESP32)
 
 ## 1. Структура проекта PlatformIO (Единый репозиторий)
 
-Обе платы прошиваются из одного репозитория через общий порт `USB-C` (хаб `SL2.1A`). Протокол и распиновка синхронизированы через общие заголовки в `include/`.
+Обе платы прошиваются из одного репозитория (поочередным подключением кабеля Type-C напрямую в `ESP #1` или `ESP #2` при снятом плоском дне и выключенном тумблере `PWR`). Протокол и распиновка синхронизированы через общие заголовки в `include/`.
 
 ```text
 cyber-deck-one/
 ├── platformio.ini                 # 2 окружения: [env:esp1_brain_sound], [env:esp2_warp_fx]
 ├── include/
 │   ├── shared_protocol.h          # Структуры PacketBrainToFx и PacketFxToBrain (по 16 байт)
-│   ├── pinout_config.h            # Единые макросы пинов для обеих плат и PCF8575 (V5.1)
+│   ├── pinout_config.h            # Единые макросы пинов для обеих плат и PCF8575 (V5.2)
 │   └── ghost_samples.h            # ~20 предгенерированных радио-сэмплов (PROGMEM Flash)
 ├── src/
 │   ├── esp1_brain_sound/main.cpp  # HUD 2.9" SPI, PCF8575, 7x EC11, Clock/Gen, Grids+Moog+Synth
@@ -53,7 +53,7 @@ cyber-deck-one/
 
 Прямое соединение `ESP #1 <-> ESP #2` (8N1, `921600` бод). Передача 16-байтного кадра занимает **`0.17 мс`** через аппаратный FIFO на Ядре 0 (`0%` нагрузки на звук).
 
-### Структуры кадров (`include/shared_protocol.h`, V5.1)
+### Структуры кадров (`include/shared_protocol.h`, V5.2)
 
 ```cpp
 #pragma pack(push, 1)
